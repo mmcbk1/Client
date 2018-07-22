@@ -23,13 +23,13 @@
             "database/factories"
         ],
         "psr-4": {
-            "App\\": "app/"
+            "App\\": "app/",
+            "Bkrol\\ClientApi\\": "packages/blue-services-client-api/src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "Tests\\": "tests/",
-            "Bkrol\\ClientApi\\": "packages/blue-services-client-api/src"
+            "Tests\\": "tests/"
         }
     },
     "extra": {

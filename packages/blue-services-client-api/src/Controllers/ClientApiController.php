@@ -1,45 +1,62 @@
 <?php
+
 namespace Bkrol\ClientApi\Controllers;
 
+use Bkrol\ClientApi\Services\ProductService;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Input;
 
 class ClientApiController extends Controller
 {
     private $productService;
 
-    public function __construct(\ProductService $productService)
+    public function __construct()
     {
-        $this->productService = $productService;
+        $token = env('CLIENT_API_TOKEN');
+        $this->productService = new ProductService($token);
     }
 
     public function getProduct(int $id)
     {
-       return  $this->productService->getProduct($id);
+        $product = json_decode($this->productService->getProduct($id));
+
+        return view('client::single', compact('product'));
     }
 
     public function getProducts()
     {
-        $params = [
-            'gt' => Input::get('gt')
-        ];
+        $params = '';
+        $gt = Input::get('gt');
 
-       return $this->productService->getProducts($params);
+        if ($gt) {
+            $params = '?gt=' . $gt;
+        }
+
+
+        $products = json_decode($this->productService->getProducts($params));
+        $products = $products->data;
+
+        return view('client::list', compact(['products']));
     }
 
     public function getAvailableProducts()
     {
-        return $this->productService->getAvailable();
+        $products = json_decode($this->productService->getAvailable());
+        $products = $products->data;
+        return view('client::list', compact(['products']));
     }
 
     public function getUnavailableProducts()
     {
-        return $this->productService->getUnavailable();
+        $products = json_decode($this->productService->getUnavailable());
+        $products = $products->data;
+        return view('client::list', compact(['products']));
     }
 
     public function create()
     {
-        return view('create');
+        return view('client::create');
     }
 
     public function update(Request $request, int $id)
@@ -48,8 +65,9 @@ class ClientApiController extends Controller
             'name' => $request->input('name'),
             'amount' => $request->input('amount')
         ];
+        $this->productService->updateProduct($params, $id);
 
-        return $this->productService->updateProduct($params, $id);
+        return back();
 
     }
 
@@ -59,13 +77,16 @@ class ClientApiController extends Controller
             'name' => $request->input('name'),
             'amount' => $request->input('amount')
         ];
+        $this->productService->createProduct($params);
 
-        return $this->productService->createProduct($params);
+        return back();
     }
 
     public function delete(int $id)
     {
-       return $this->productService->deleteProduct($id);
+        $this->productService->deleteProduct($id);
+        return back();
+
     }
 
 

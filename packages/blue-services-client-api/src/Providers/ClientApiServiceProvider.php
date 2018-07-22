@@ -1,5 +1,5 @@
 <?php
-namespace Bkrol\ClientApi;
+namespace Bkrol\ClientApi\Providers;
 
 use Illuminate\Support\ServiceProvider;
 
@@ -23,5 +23,6 @@ class ClientApiServiceProvider extends ServiceProvider
     public function register()
     {
         $this->app->make('Bkrol\ClientApi\Controllers\ClientApiController');
+        $this->loadViewsFrom(__DIR__.'/../views', 'client');
     }
 }

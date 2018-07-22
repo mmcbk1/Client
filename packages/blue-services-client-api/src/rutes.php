@@ -1,11 +1,11 @@
 <?php
 
-Route::get('products', 'ClientApiController@getProducts');
-Route::get('products/available', 'ClientApiController@getAvailableProducts');
-Route::get('products/unavailable', 'ClientApiController@getUnavailableProducts');
-Route::get('product/{id}', 'ClientApiController@getProduct');
-Route::get('product/create', 'ClientApiController@create');
-Route::post('product', 'ClientApiController@store');
-Route::put('product/{id}', 'ClientApiController@update');
-Route::delete('product/{id}', 'ClientApiController@delete');
+Route::get('products/', 'Bkrol\ClientApi\Controllers\ClientApiController@getProducts')->name('graterThen');
+Route::get('products/available', 'Bkrol\ClientApi\Controllers\ClientApiController@getAvailableProducts')->name('available');
+Route::get('products/unavailable', 'Bkrol\ClientApi\Controllers\ClientApiController@getUnavailableProducts')->name('unavailable');
+Route::get('product/create', 'Bkrol\ClientApi\Controllers\ClientApiController@create')->name('createProduct');
+Route::get('product/{id}', 'Bkrol\ClientApi\Controllers\ClientApiController@getProduct')->name('single');
+Route::post('product', 'Bkrol\ClientApi\Controllers\ClientApiController@store')->name('store');
+Route::put('product/{id}', 'Bkrol\ClientApi\Controllers\ClientApiController@update')->name('update');
+Route::get('delete/{id}', 'Bkrol\ClientApi\Controllers\ClientApiController@delete')->name('removeProduct');
 

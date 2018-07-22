@@ -1,17 +1,18 @@
 <?php
+
 namespace Bkrol\ClientApi\Services;
 
 use GuzzleHttp\Client;
 
 class ProductService
 {
-    const AVAILABLE_PRODUCTS_URL = 'localhost:8080/products/available';
-    const UNAVAILABLE_PRODUCTS_URL = 'localhost:8080/products/unavailable';
-    const PRODUCTS_URL = 'localhost:8080/products';
-    const PRODUCT_CREATE_URL = 'localhost:8080/product';
-    const PRODUCT_UPDATE_URL = 'localhost:8080/product/';
-    const PRODUCT_DELETE_URL = 'localhost:8080/product/';
-    const PRODUCT_GET_URL = 'localhost:8080/product/';
+    const AVAILABLE_PRODUCTS_URL = 'http://localhost:8080/products/available';
+    const UNAVAILABLE_PRODUCTS_URL = 'http://localhost:8080/products/unavailable';
+    const PRODUCTS_URL = 'http://localhost:8080/products';
+    const PRODUCT_CREATE_URL = 'http://localhost:8080/product';
+    const PRODUCT_UPDATE_URL = 'http://localhost:8080/product/';
+    const PRODUCT_DELETE_URL = 'http://localhost:8080/product/';
+    const PRODUCT_GET_URL = 'http://localhost:8080/product/';
 
     private $token;
     private $client;
@@ -21,34 +22,27 @@ class ProductService
     {
         $this->token = $token;
         $this->client = new Client([
-            'headers' => 'Authorization:'.$this->token
+            'headers' => ['Authorization' => $this->token]
         ]);
     }
 
     public function getProduct($id)
     {
-        $response = $this->client->get(self::PRODUCT_GET_URL.$id);
+        $response = $this->client->get(self::PRODUCT_GET_URL . $id);
 
         return $this->getResponse($response);
     }
 
-    public function getProducts(array $params)
+    public function getProducts(string $params)
     {
-
-        $formParams = [
-            'form_params'=>[]
-        ];
-        if (count($params)){
-           $formParams['form_params'] = $params;
-        }
-        $response = $this->client->get(self::PRODUCTS_URL, $formParams);
+        $response = $this->client->get(self::PRODUCTS_URL.$params);
 
         return $this->getResponse($response);
     }
 
     public function getAvailable()
     {
-       $response = $this->client->get(self::AVAILABLE_PRODUCTS_URL);
+        $response = $this->client->get(self::AVAILABLE_PRODUCTS_URL);
 
         return $this->getResponse($response);
     }
@@ -78,23 +72,20 @@ class ProductService
             'form_params' => $data
         ];
 
-        $response = $this->client->put(self::PRODUCT_UPDATE_URL.$id, $formParams);
+        $response = $this->client->put(self::PRODUCT_UPDATE_URL . $id, $formParams);
 
         return $this->getResponse($response);
     }
 
     public function deleteProduct(int $id)
     {
-        $response = $this->client->delete(self::PRODUCT_DELETE_URL.$id);
+        $response = $this->client->delete(self::PRODUCT_DELETE_URL . $id);
 
         return $this->getResponse($response);
     }
 
     private function getResponse($response)
     {
-        return response()->json([
-            'data' => $response->getBody(),
-            'status' => $response->getStatusCode()
-        ]);
+        return $response->getBody()->getContents();
     }
 }

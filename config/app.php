@@ -151,7 +151,7 @@ return [
          * Package Service Providers...
          *
          */
-        Bkrol\ClientApi\ClientApiServiceProvider::class,
+        Bkrol\ClientApi\Providers\ClientApiServiceProvider::class,
 
         /*
          * Application Service Providers...
